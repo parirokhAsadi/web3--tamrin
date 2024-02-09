@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body>
+    <form action="" onsubmit="registerUser(event)" id="registerUser">
+        <input type="text" placeholder="first name" name="fname">
+        <input type="text" placeholder="last name" name="lname">
+        <button id="button">register</button>
+    </form>
+
+    <div id="userInfo">
+
+    </div>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="assets/helpers/cookie.js"></script>
+    <script>
+        if (getCookie('fname') == '' || getCookie('lname') == '') {
+            showUserRegisterForm();
+        } else {
+            showUserInfo();
+        }
+
+        function registerUser(e) {
+            e.preventDefault();
+            let fname = document.querySelector('[name=fname]').value;
+            let lname = document.querySelector('[name=lname]').value;
+            if (fname.length < 3 || lname.length < 3) {
+                showAlert('fname or lnam bishtar az 3 character bashad', 'error');
+            } else {
+                setCookie('fname', fname, 365);
+                setCookie('lname', lname, 365);
+                showUserInfo();
+            }
+        }
+
+        function showUserInfo() {
+            document.getElementById('registerUser').style.display = 'none';
+            document.getElementById('userInfo').style.display = 'block';
+            document.getElementById('userInfo').innerHTML =
+                `${getCookie('fname')} ${getCookie('lname')} khosh amadi <button id="logout" onclick="logOut()">
+logout</button>`
+        }
+        function showUserRegisterForm() {
+            document.getElementById('registerUser').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'none';
+        }
+
+        function logOut() {
+            deleteCookie('fname');
+            deleteCookie('lname');
+            showUserRegisterForm();
+        }
+
+        function showAlert(txt, status) {
+            let boxBackColor = null;
+            if (status == 'error') {
+                boxBackColor = "linear-gradient(to right, tomato, red)"
+            } else if (status == 'success') {
+                boxBackColor = "linear-gradient(to right, lightgreen,green)"
+
+            }
+            Toastify({
+                text: txt,
+                duration: 3000,
+                close: false,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: boxBackColor,
+                },
+            }).showToast();
+        }
+
+    </script>
+</body>
+
+</html>
+
+
+
+
